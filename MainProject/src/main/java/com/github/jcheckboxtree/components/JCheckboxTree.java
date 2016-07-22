@@ -32,14 +32,9 @@ import javax.swing.tree.TreeSelectionModel;
  * icons for folder entries or leaf entries. When the default icons are used, they will act as
  * "fallback icons" for any entries with no custom icon.
  *
- * This class uses a custom tree cell renderer, but does not need a custom tree cell editor.
+ * This tree uses a custom tree cell renderer, but does not require a custom tree cell editor class.
  * Changing the state of checkboxes is handled through the JCheckboxTree.processMouseEvent()
  * function.
- *
- * Technical note: This class was originally implemented using a custom tree cell editor, but
- * unfortunately this caused a bug in some Java "look and feel" settings, where the JCheckBox
- * component could behave erratically. The checkbox would sometimes flicker when the tree selection
- * was changed.
  */
 public class JCheckboxTree extends JTree {
 
@@ -59,7 +54,31 @@ public class JCheckboxTree extends JTree {
      */
     public boolean iconFallbackLeafNodes = false;
 
-    public static Color selectionBackgroundColor;
+    /**
+     * rowWidthAddedPixels, This determines the number of pixels that should be added to the width
+     * of each tree row. Rows can only be selected by clicking on a space that is inside the total
+     * row width, so this number is set to a large value by default. A large value allows the user
+     * to select a row by clicking anywhere in the empty space to the right of each row. The
+     * horizontal scrollbar of the tree scroll pane should be disabled to accommodate longer rows.
+     *
+     * If this is set to a low value (or zero), then the user will only be able to select a row by
+     * clicking on or near the row text. The only benefit of a low value is that the horizontal
+     * scrollbar will become more usable again.
+     */
+    public int rowWidthAddedPixels = 2000;
+
+    /**
+     * selectionBackgroundColor, This is the color that will be used for the background of any
+     * selected rows. This is initialized to a default color for the current look and feel, but it
+     * can be set to any color that is desired. This color is is used inside this class, and inside
+     * the CheckCellRenderer class.
+     */
+    public Color selectionBackgroundColor;
+
+    /**
+     * selectionForegroundColor, This holds the default color for selected entry foreground areas.
+     */
+    public Color selectionForegroundColor;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -140,26 +159,26 @@ public class JCheckboxTree extends JTree {
      * hides the protected method of the same name in JTree.
      */
     protected static DefaultTreeModel getDefaultTreeModel() {
-        CheckEntry root = new CheckEntry("JTree");
+        CheckEntry root = new CheckEntry(BoxVisible.Show, false, "JTree");
         CheckEntry parent;
-        parent = new CheckEntry("colors");
+        parent = new CheckEntry(BoxVisible.Show, false, "colors");
         root.add(parent);
-        parent.add(new CheckEntry("blue"));
-        parent.add(new CheckEntry("violet"));
-        parent.add(new CheckEntry("red"));
-        parent.add(new CheckEntry("yellow"));
-        parent = new CheckEntry("sports");
+        parent.add(new CheckEntry(BoxVisible.Show, false, "blue"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "violet"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "red"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "yellow"));
+        parent = new CheckEntry(BoxVisible.Show, false, "sports");
         root.add(parent);
-        parent.add(new CheckEntry("basketball"));
-        parent.add(new CheckEntry("soccer"));
-        parent.add(new CheckEntry("football"));
-        parent.add(new CheckEntry("hockey"));
-        parent = new CheckEntry("food");
+        parent.add(new CheckEntry(BoxVisible.Show, false, "basketball"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "soccer"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "football"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "hockey"));
+        parent = new CheckEntry(BoxVisible.Show, false, "food");
         root.add(parent);
-        parent.add(new CheckEntry("hot dogs"));
-        parent.add(new CheckEntry("pizza"));
-        parent.add(new CheckEntry("ravioli"));
-        parent.add(new CheckEntry("bananas"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "hot dogs"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "pizza"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "ravioli"));
+        parent.add(new CheckEntry(BoxVisible.Show, false, "bananas"));
         return new DefaultTreeModel(root);
     }
 
@@ -187,6 +206,7 @@ public class JCheckboxTree extends JTree {
         setCellRenderer(new CheckCellRenderer(this));
         this.selectionModel.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         selectionBackgroundColor = UIManager.getColor("Tree.selectionBackground");
+        selectionForegroundColor = UIManager.getColor("Tree.selectionForeground");
         // This changes the line style for the metal look and feel.
         putClientProperty("JTree.lineStyle", "Angled");
     }
@@ -194,6 +214,11 @@ public class JCheckboxTree extends JTree {
     /**
      * processMouseEvent, This catches tree mouse pressed events, for changing the state of
      * checkboxes. This overrides the processMouseEvent() function in JTree.
+     *
+     * Technical note: The checkbox tree was originally implemented using a custom tree cell editor,
+     * but unfortunately this caused a bug in some Java "look and feel" settings, where the
+     * JCheckBox component could behave erratically. The checkbox would sometimes flicker when the
+     * tree selection was changed. Using the processMouseEvent() function instead fixes that bug.
      */
     @Override
     protected void processMouseEvent(MouseEvent event) {

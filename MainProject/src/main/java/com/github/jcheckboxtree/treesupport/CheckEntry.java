@@ -48,6 +48,26 @@ public class CheckEntry extends DefaultMutableTreeNode {
     }
 
     /**
+     * Constructor, with data.
+     */
+    public CheckEntry(BoxVisible checkboxVisible, boolean checked, String text) {
+        super();
+        this.checkboxVisible = checkboxVisible;
+        this.checked = checked;
+        this.text = text;
+    }
+
+    /**
+     * Constructor, with data and icon.
+     */
+    public CheckEntry(BoxVisible checkboxVisible, boolean checked, String text, Icon userIcon) {
+        super();
+        this.checkboxVisible = checkboxVisible;
+        this.checked = checked;
+        this.text = text;
+    }
+
+    /**
      * Constructor, with a user object.
      */
     public CheckEntry(Object userObject) {

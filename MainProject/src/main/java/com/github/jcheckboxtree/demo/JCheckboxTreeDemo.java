@@ -51,7 +51,7 @@ public class JCheckboxTreeDemo extends JFrame {
 
         // Create an instance of the checkbox tree.
         checkboxTree = new JCheckboxTree();
-        
+
         // Turn on default icons for the tree.
         checkboxTree.iconFallbackFolderNodes = true;
         checkboxTree.iconFallbackLeafNodes = false;

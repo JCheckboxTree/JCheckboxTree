@@ -41,16 +41,6 @@ public class CheckCellRenderer extends JPanel
     private transient Icon iconOpenFolder;
 
     /**
-     * selectionBackgroundColor, This holds the default color for selected entry background areas.
-     */
-    private final Color selectionBackgroundColor;
-
-    /**
-     * selectionForegroundColor, This holds the default color for selected entry foreground areas.
-     */
-    private final Color selectionForegroundColor;
-
-    /**
      * textBackgroundColor, This holds the default color for unselected entry background areas.
      */
     private final Color textBackgroundColor;
@@ -94,8 +84,6 @@ public class CheckCellRenderer extends JPanel
         boolean focusPainted = (focusPaintedObject != null && focusPaintedObject);
         checkbox.setFocusPainted(focusPainted);
 
-        selectionBackgroundColor = UIManager.getColor("Tree.selectionBackground");
-        selectionForegroundColor = UIManager.getColor("Tree.selectionForeground");
         textBackgroundColor = UIManager.getColor("Tree.textBackground");
         textForegroundColor = UIManager.getColor("Tree.textForeground");
     }
@@ -144,19 +132,30 @@ public class CheckCellRenderer extends JPanel
 
     /**
      * getPreferredSize, This returns the preferred size of the cell renderer.
+     *
+     * Technical note: A more detailed calculation of the width was attempted by trying to get the
+     * current row indentation from the treeUI and the width of the tree, but that approach ends up
+     * being both very complex and unreliable.
      */
     @Override
     public Dimension getPreferredSize() {
+        // Gather some other variables we will need.
         Dimension checkboxPreferredSize = checkbox.getPreferredSize();
-        Dimension defaultRendererPreferredSize = defaultRendererLabel.getPreferredSize();
-        int treeWidth = tree.getBounds().width;
-        int estimatedRowWidth = leftSideBackgroundPanel.getPreferredSize().width
-                + defaultRendererPreferredSize.width + 800;
-        int width = Math.max(treeWidth, estimatedRowWidth);
-        width += 0;
-        int height = Math.max(checkboxPreferredSize.height, defaultRendererPreferredSize.height);
-        height += 1;
-        return new Dimension(width, height);
+        Dimension labelAreaPreferredSize = defaultRendererLabel.getPreferredSize();
+        // Calculate the width.
+        int widthResult = checkboxPreferredSize.width
+                + labelAreaPreferredSize.width + tree.rowWidthAddedPixels;
+        // Add enough pixels to account for most situations where the icon width is not reported
+        // in the label area size.
+        widthResult += 36;
+        // Calculate the height. 
+        int heightResult = Math.max((checkboxPreferredSize.height + 2),
+                labelAreaPreferredSize.height);
+        // Add enough pixels to make the height of the selection bar vertically symmetrical around
+        // the checkbox.
+        heightResult += 1;
+        // Return a preferred dimensions object.
+        return new Dimension(widthResult, heightResult);
     }
 
     /**
@@ -166,18 +165,19 @@ public class CheckCellRenderer extends JPanel
     @Override
     public Component getTreeCellRendererComponent(JTree possibleTree, Object possibleEntry,
             boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-        // Configure the default renderer based on the passed in components.
-        defaultRendererLabel.getTreeCellRendererComponent(
-                possibleTree, possibleEntry, selected, expanded, leaf, row, hasFocus);
-
-        // If we don't receive the expected class types, then return the default renderer by itself.
+        // If we don't receive the expected class types, then return the default renderer by itself,
+        // using the default string value for the unexpected entry object.
         if ((!(possibleEntry instanceof CheckEntry))
                 || (!(possibleTree instanceof JCheckboxTree))) {
-            return defaultRendererLabel;
+            return defaultRendererLabel.getTreeCellRendererComponent(
+                    possibleTree, possibleEntry, selected, expanded, leaf, row, hasFocus);
         }
         // All received instances are the expected class type.
         JCheckboxTree checkTree = (JCheckboxTree) possibleTree;
         CheckEntry entry = (CheckEntry) possibleEntry;
+        // Configure the default renderer based on the passed in components.
+        defaultRendererLabel.getTreeCellRendererComponent(
+                checkTree, entry.text, selected, expanded, leaf, row, hasFocus);
         // Configure the checkbox state.
         checkbox.setVisible(entry.isCheckboxVisible());
         checkbox.setSelected(entry.checked);
@@ -192,12 +192,12 @@ public class CheckCellRenderer extends JPanel
         // Configure the areas to match the appropriate selection colors.
         if (selected) {
             // Change the areas to match the selection colors.
-            leftSideBackgroundPanel.setForeground(selectionForegroundColor);
-            leftSideBackgroundPanel.setBackground(selectionBackgroundColor);
-            rightSideBackgroundPanel.setForeground(selectionForegroundColor);
-            rightSideBackgroundPanel.setBackground(selectionBackgroundColor);
-            defaultRendererPanel.setForeground(selectionForegroundColor);
-            defaultRendererPanel.setBackground(selectionBackgroundColor);
+            leftSideBackgroundPanel.setForeground(tree.selectionForegroundColor);
+            leftSideBackgroundPanel.setBackground(tree.selectionBackgroundColor);
+            rightSideBackgroundPanel.setForeground(tree.selectionForegroundColor);
+            rightSideBackgroundPanel.setBackground(tree.selectionBackgroundColor);
+            defaultRendererPanel.setForeground(tree.selectionForegroundColor);
+            defaultRendererPanel.setBackground(tree.selectionBackgroundColor);
         } else {
             // Change all areas to match the "normal" (unselected) colors.
             leftSideBackgroundPanel.setForeground(textForegroundColor);
@@ -210,6 +210,7 @@ public class CheckCellRenderer extends JPanel
 
         // Set the appropriate icon for this entry.
         // This can also hide the icon, when no icon is desired.
+        // Also save the icon height for use by the getPreferredSize() function.
         boolean rowIsFolder = (entry.getChildCount() > 0);
         boolean rowIsExpanded = checkTree.isExpanded(row);
         if (entry.userIconVisible && entry.userIcon != null) {
@@ -221,10 +222,8 @@ public class CheckCellRenderer extends JPanel
         } else if (checkTree.iconFallbackLeafNodes && (!rowIsFolder)) {
             defaultRendererLabel.setIcon(iconLeaf);
         } else {
-            defaultRendererLabel.setIcon(null);
+            defaultRendererLabel.setIcon(new ImageIcon());
         }
-        defaultRendererLabel.revalidate();
-        defaultRendererLabel.repaint();
 
         // Return this class instance. This class is a panel that contains the checkbox and the 
         // default renderer.
@@ -322,7 +321,7 @@ public class CheckCellRenderer extends JPanel
         {
             rightSideBackgroundPanel.setLayout(new FormLayout(
                     "3px, pref:grow, 1px",
-                    "pref:grow, fill:pref, pref:grow"));
+                    "pref:grow(0.99), fill:pref, pref:grow"));
 
             //======== defaultRendererPanel ========
             {
