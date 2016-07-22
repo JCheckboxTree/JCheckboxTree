@@ -1,0 +1,72 @@
+JFDML JFormDesigner: "5.2.1.0.138" Java: "1.8.0_91" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "pref, pref:grow"
+			"$rowSpecs": "fill:pref:grow"
+		} ) {
+			name: "this"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "0px, pref:grow, 0px"
+				"$rowSpecs": "pref:grow, fill:pref, pref:grow"
+			} ) {
+				name: "leftSideBackgroundPanel"
+				auxiliary() {
+					"JavaCodeGenerator.variableGetter": true
+				}
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "pref:grow"
+					"$rowSpecs": "fill:pref"
+				} ) {
+					name: "checkboxActivationZonePanel"
+					"background": new java.awt.Color( 102, 255, 102, 255 )
+					"opaque": false
+					"border": new javax.swing.border.EmptyBorder( 2, 2, 2, 2 )
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+					}
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "checkbox"
+						"margin": new java.awt.Insets( 0, 0, 0, 0 )
+						auxiliary() {
+							"JavaCodeGenerator.variableGetter": true
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "3px, pref:grow, 1px"
+				"$rowSpecs": "pref:grow, fill:pref, pref:grow"
+			} ) {
+				name: "rightSideBackgroundPanel"
+				auxiliary() {
+					"JavaCodeGenerator.variableGetter": true
+				}
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "pref:grow"
+					"$rowSpecs": "fill:pref:grow"
+				} ) {
+					name: "defaultRendererComponentPanel"
+					"background": new java.awt.Color( 255, 255, 255, 255 )
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+						"JavaCodeGenerator.variableName": "defaultRendererPanel"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 65 )
+		} )
+	}
+}
