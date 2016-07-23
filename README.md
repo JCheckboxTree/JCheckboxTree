@@ -1,5 +1,5 @@
 # JCheckboxTree
-Java swing checkbox tree. Easy to use, good looking, nice features.
+Java swing checkbox tree. Easy to use, good looking, and nice features.
 
 
 ## General Features:
