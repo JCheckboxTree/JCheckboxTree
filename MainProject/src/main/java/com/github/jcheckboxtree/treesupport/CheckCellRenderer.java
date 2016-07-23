@@ -195,8 +195,13 @@ public class CheckCellRenderer extends JPanel
         // Configure the areas to match the appropriate selection colors.
         if (selected) {
             // Change the areas to match the selection colors.
-            leftSideBackgroundPanel.setForeground(tree.selectionForegroundColor);
-            leftSideBackgroundPanel.setBackground(tree.selectionBackgroundColor);
+            if (tree.selectionsHighlightEntireRow) {
+                leftSideBackgroundPanel.setForeground(tree.selectionForegroundColor);
+                leftSideBackgroundPanel.setBackground(tree.selectionBackgroundColor);
+            } else {
+                leftSideBackgroundPanel.setForeground(textForegroundColor);
+                leftSideBackgroundPanel.setBackground(textBackgroundColor);
+            }
             rightSideBackgroundPanel.setForeground(tree.selectionForegroundColor);
             rightSideBackgroundPanel.setBackground(tree.selectionBackgroundColor);
             defaultRendererPanel.setForeground(tree.selectionForegroundColor);
