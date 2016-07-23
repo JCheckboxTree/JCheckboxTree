@@ -139,7 +139,8 @@ public class CheckCellRenderer extends JPanel
      */
     @Override
     public Dimension getPreferredSize() {
-        // Gather some other variables we will need.
+        // Gather some variables we will need.
+        int minimumWidth = 50;
         Dimension checkboxPreferredSize = checkbox.getPreferredSize();
         Dimension labelAreaPreferredSize = defaultRendererLabel.getPreferredSize();
         // Calculate the width.
@@ -148,6 +149,8 @@ public class CheckCellRenderer extends JPanel
         // Add enough pixels to account for most situations where the icon width is not reported
         // in the label area size.
         widthResult += 36;
+        // Enforce a reasonable minimum width.
+        widthResult = (widthResult < minimumWidth) ? minimumWidth : widthResult;
         // Calculate the height. 
         int heightResult = Math.max((checkboxPreferredSize.height + 2),
                 labelAreaPreferredSize.height);

@@ -58,12 +58,17 @@ public class JCheckboxTree extends JTree {
      * rowWidthAddedPixels, This determines the number of pixels that should be added to the width
      * of each tree row. Rows can only be selected by clicking on a space that is inside the total
      * row width, so this number is set to a large value by default. A large value allows the user
-     * to select a row by clicking anywhere in the empty space to the right of each row. The
-     * horizontal scrollbar of the tree scroll pane should be disabled to accommodate longer rows.
+     * to select a row by clicking anywhere in the empty space to the right of each row.
+     *
+     * When this is set to a large value, "selectionsHighlightsEntireRow" should generally be set to
+     * true, and the horizontal scrollbar of the tree scroll pane should generally be disabled.
      *
      * If this is set to a low value (or zero), then the user will only be able to select a row by
-     * clicking on or near the row text. The only benefit of a low value is that the horizontal
-     * scrollbar will become more usable again.
+     * clicking on or near the row text. A possible benefit of a low value is that the horizontal
+     * scrollbar would become more usable again.
+     *
+     * Note that this could also be set to a negative value, but that would run the risk of chopping
+     * off some of the row text in certain common situations.
      */
     public int rowWidthAddedPixels = 2000;
 
@@ -80,15 +85,32 @@ public class JCheckboxTree extends JTree {
      */
     public Color selectionForegroundColor;
 
+    /**
+     * selectionsHighlightEntireRow, If this is true, then selecting a row will highlight the entire
+     * row, from the left to the right side of the tree area. If this is false, then selecting a row
+     * will only highlight the row text, plus any additional pixels that are set in the
+     * "rowWidthAddedPixels" variable.
+     *
+     * When this is set to false, the rowWidthAddedPixels setting should generally be set to a low
+     * value or zero.
+     *
+     * When this is set to true, the tree will automatically be set to setOpaque(false) to
+     * accommodate the custom highlight rendering.
+     */
+    public boolean selectionsHighlightEntireRow = true;
+
     @Override
     public void paintComponent(Graphics g) {
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-        if (getSelectionCount() > 0) {
-            for (int i : getSelectionRows()) {
-                Rectangle r = getRowBounds(i);
-                g.setColor(selectionBackgroundColor);
-                g.fillRect(0, r.y, getWidth(), r.height);
+        if (selectionsHighlightEntireRow) {
+            setOpaque(false);
+            g.setColor(getBackground());
+            g.fillRect(0, 0, getWidth(), getHeight());
+            if (getSelectionCount() > 0) {
+                for (int i : getSelectionRows()) {
+                    Rectangle r = getRowBounds(i);
+                    g.setColor(selectionBackgroundColor);
+                    g.fillRect(0, r.y, getWidth(), r.height);
+                }
             }
         }
         super.paintComponent(g);
@@ -197,12 +219,11 @@ public class JCheckboxTree extends JTree {
      * be done by the specific constructors before this function is called.
      */
     private void initializeTreeSettings() {
+        setEnabled(true);
         setRootVisible(false);
         setShowsRootHandles(true);
         setRowHeight(0);
-        setOpaque(false);
         setToggleClickCount(0);
-        setEnabled(true);
         setCellRenderer(new CheckCellRenderer(this));
         this.selectionModel.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         selectionBackgroundColor = UIManager.getColor("Tree.selectionBackground");
