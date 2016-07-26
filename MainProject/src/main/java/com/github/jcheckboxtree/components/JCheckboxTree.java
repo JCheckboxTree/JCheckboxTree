@@ -3,11 +3,15 @@ package com.github.jcheckboxtree.components;
 import com.github.jcheckboxtree.treesupport.BoxVisible;
 import com.github.jcheckboxtree.treesupport.CheckCellRenderer;
 import com.github.jcheckboxtree.treesupport.CheckEntry;
+import com.github.jcheckboxtree.treesupport.Use;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
@@ -182,26 +186,37 @@ public class JCheckboxTree extends JTree {
      * hides the protected method of the same name in JTree.
      */
     protected static DefaultTreeModel getDefaultTreeModel() {
+        // Get an icon to use in the model. 
+        Icon iconOriginal = javax.swing.UIManager.getIcon("OptionPane.informationIcon");
+        Image imageOriginal = Use.iconToImage(iconOriginal);
+        Image imageScaled = imageOriginal.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        Icon icon = new ImageIcon(imageScaled); 
+        // Create the tree model. 
         CheckEntry root = new CheckEntry(BoxVisible.Show, false, "JTree");
-        CheckEntry parent;
-        parent = new CheckEntry(BoxVisible.Show, false, "colors");
-        root.add(parent);
-        parent.add(new CheckEntry(BoxVisible.Show, false, "blue"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "violet"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "red"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "yellow"));
-        parent = new CheckEntry(BoxVisible.Show, false, "sports");
-        root.add(parent);
-        parent.add(new CheckEntry(BoxVisible.Show, false, "basketball"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "soccer"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "football"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "hockey"));
-        parent = new CheckEntry(BoxVisible.Show, false, "food");
-        root.add(parent);
-        parent.add(new CheckEntry(BoxVisible.Show, false, "hot dogs"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "pizza"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "ravioli"));
-        parent.add(new CheckEntry(BoxVisible.Show, false, "bananas"));
+        CheckEntry custom = new CheckEntry(BoxVisible.Show, false, "Customized Entries");
+        root.add(custom);
+        custom.add(new CheckEntry(BoxVisible.Show, false, "Entry with a custom image icon.", icon));
+        custom.add(new CheckEntry(BoxVisible.Show, true, "Entry that is initially checked."));
+        custom.add(new CheckEntry(BoxVisible.Hide, false, "Entry with no checkbox."));
+        CheckEntry colors = new CheckEntry(BoxVisible.Show, false, "Colors");
+        root.add(colors);
+        colors.add(new CheckEntry(BoxVisible.Show, false, "blue"));
+        colors.add(new CheckEntry(BoxVisible.Show, false, "violet"));
+        colors.add(new CheckEntry(BoxVisible.Show, false, "red"));
+        colors.add(new CheckEntry(BoxVisible.Show, false, "yellow"));
+        CheckEntry food = new CheckEntry(BoxVisible.Show, false, "Food");
+        root.add(food);
+        food.add(new CheckEntry(BoxVisible.Show, false, "hot dogs"));
+        food.add(new CheckEntry(BoxVisible.Show, false, "pizza"));
+        food.add(new CheckEntry(BoxVisible.Show, false, "ravioli"));
+        food.add(new CheckEntry(BoxVisible.Show, false, "bananas"));
+        CheckEntry coloredFood = new CheckEntry(BoxVisible.Show, false, "Colorized Food");
+        food.add(coloredFood);
+        coloredFood.add(new CheckEntry(BoxVisible.Show, false, "Green eggs and ham"));
+        coloredFood.add(new CheckEntry(BoxVisible.Show, false, "Skittles bite sized candies"));
+        coloredFood.add(new CheckEntry(BoxVisible.Show, false, "Painted Easter eggs"));
+        CheckEntry last = new CheckEntry(BoxVisible.Show, false, "More stuff.");
+        root.add(last);
         return new DefaultTreeModel(root);
     }
 

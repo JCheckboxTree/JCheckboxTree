@@ -66,6 +66,7 @@ public class CheckEntry extends DefaultMutableTreeNode {
         this.checkboxVisible = checkboxVisible;
         this.checked = checked;
         this.text = text;
+        this.userIcon = userIcon;
     }
 
     /**
