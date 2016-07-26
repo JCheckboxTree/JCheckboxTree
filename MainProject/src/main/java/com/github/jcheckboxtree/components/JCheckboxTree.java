@@ -152,6 +152,7 @@ public class JCheckboxTree extends JTree {
      * CheckboxNodes.
      */
     private void checkTreeForInvalidNodes() {
+
     }
 
     /**
@@ -204,6 +205,9 @@ public class JCheckboxTree extends JTree {
         return new DefaultTreeModel(root);
     }
 
+    /**
+     * getModelAsDefaultTreeModel, Returns the tree model as a DefaultTreeModel instance.
+     */
     public DefaultTreeModel getModelAsDefaultTreeModel() {
         TreeModel model = getModel();
         if (model instanceof DefaultTreeModel) {
@@ -211,6 +215,19 @@ public class JCheckboxTree extends JTree {
         }
         throw new RuntimeException("JCheckboxTree.getModelAsDefaultTreeModel(), "
                 + "The current model is not a DefaultTreeModel instance.");
+    }
+
+    /**
+     * getRoot, Returns the root entry of this tree. If the tree has no entries, or if the tree has
+     * no model, this will return null.
+     */
+    public CheckEntry getRoot() {
+        TreeModel model = getModel();
+        if (model == null) {
+            return null;
+        }
+        CheckEntry rootEntry = (CheckEntry) model.getRoot();
+        return rootEntry;
     }
 
     /**
