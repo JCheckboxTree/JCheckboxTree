@@ -203,7 +203,7 @@ public class JCheckboxTree extends JTree {
         colors.add(new CheckEntry(BoxVisible.Show, false, "blue", Color.blue));
         colors.add(new CheckEntry(BoxVisible.Show, false, "green", Color.green));
         colors.add(new CheckEntry(BoxVisible.Show, false, "red", Color.red));
-        colors.add(new CheckEntry(BoxVisible.Show, false, "orange", Color.orange));
+        colors.add(new CheckEntry(BoxVisible.Show, false, "orange", new Color(255, 140, 0)));
         CheckEntry food = new CheckEntry(BoxVisible.Show, false, "Food");
         root.add(food);
         food.add(new CheckEntry(BoxVisible.Show, false, "hot dogs"));
