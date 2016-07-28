@@ -1,5 +1,6 @@
 package com.github.jcheckboxtree.treesupport;
 
+import java.awt.Color;
 import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -29,9 +30,25 @@ public class CheckEntry extends DefaultMutableTreeNode {
     public String text = "";
 
     /**
-     * userIcon, This holds an optional user icon for this tree entry. Note that default tree icons
-     * can also be displayed, by using the settings "JCheckBoxTree.iconFallbackFolderNodes" and
-     * "JCheckBoxTree.iconFallbackLeafNodes".
+     * textBackgroundColor, This holds an optional custom background color for the entry text. If
+     * this is null, then a default color will be used.
+     */
+    public Color textBackgroundColor = null;
+
+    /**
+     * textForegroundColor, This holds an optional custom foreground color for the entry text. If
+     * this is null, then a default color will be used.
+     */
+    public Color textForegroundColor = null;
+
+    /**
+     * userIcon, This holds an optional user icon for this tree entry.
+     *
+     * Note: Default tree icons can also be displayed, by using the settings
+     * "JCheckBoxTree.iconFallbackFolderNodes" and "JCheckBoxTree.iconFallbackLeafNodes".
+     *
+     * Note: The minimum row height of the tree will automatically be adjusted to accommodate the
+     * maximum height of any visible row icons. See also, JTree.setRowHeight().
      */
     public Icon userIcon = null;
 
@@ -59,6 +76,18 @@ public class CheckEntry extends DefaultMutableTreeNode {
     }
 
     /**
+     * Constructor, with data and color.
+     */
+    public CheckEntry(BoxVisible checkboxVisible, boolean checked, String text,
+            Color textForegroundColor) {
+        super();
+        this.checkboxVisible = checkboxVisible;
+        this.checked = checked;
+        this.text = text;
+        this.textForegroundColor = textForegroundColor;
+    }
+
+    /**
      * Constructor, with data and icon.
      */
     public CheckEntry(BoxVisible checkboxVisible, boolean checked, String text, Icon userIcon) {
@@ -67,6 +96,19 @@ public class CheckEntry extends DefaultMutableTreeNode {
         this.checked = checked;
         this.text = text;
         this.userIcon = userIcon;
+    }
+
+    /**
+     * Constructor, with data, icon, and color.
+     */
+    public CheckEntry(BoxVisible checkboxVisible, boolean checked, String text, Icon userIcon,
+            Color textForegroundColor) {
+        super();
+        this.checkboxVisible = checkboxVisible;
+        this.checked = checked;
+        this.text = text;
+        this.userIcon = userIcon;
+        this.textForegroundColor = textForegroundColor;
     }
 
     /**

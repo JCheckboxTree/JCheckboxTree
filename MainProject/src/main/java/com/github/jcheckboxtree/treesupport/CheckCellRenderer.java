@@ -27,6 +27,9 @@ public class CheckCellRenderer extends JPanel
 
     /**
      * iconClosedFolder, This holds the default icon for closed folder entries.
+     *
+     * Note: The default icon variables do not need to be static because there is only one renderer
+     * instance per tree
      */
     private transient Icon iconClosedFolder;
 
@@ -41,14 +44,16 @@ public class CheckCellRenderer extends JPanel
     private transient Icon iconOpenFolder;
 
     /**
-     * textBackgroundColor, This holds the default color for unselected entry background areas.
+     * defaultTextBackgroundColor, This holds the default color for unselected entry background
+     * areas.
      */
-    private final Color textBackgroundColor;
+    private final Color defaultTextBackgroundColor;
 
     /**
-     * textForegroundColor, This holds the default color for unselected entry foreground areas.
+     * defaultTextForegroundColor, This holds the default color for unselected entry foreground
+     * areas.
      */
-    private final Color textForegroundColor;
+    private final Color defaultTextForegroundColor;
 
     /**
      * tree, This holds the tree associated with this renderer.
@@ -84,8 +89,8 @@ public class CheckCellRenderer extends JPanel
         boolean focusPainted = (focusPaintedObject != null && focusPaintedObject);
         checkbox.setFocusPainted(focusPainted);
 
-        textBackgroundColor = UIManager.getColor("Tree.textBackground");
-        textForegroundColor = UIManager.getColor("Tree.textForeground");
+        defaultTextBackgroundColor = UIManager.getColor("Tree.textBackground");
+        defaultTextForegroundColor = UIManager.getColor("Tree.textForeground");
     }
 
     /**
@@ -93,6 +98,24 @@ public class CheckCellRenderer extends JPanel
      */
     public JCheckBox getCheckbox() {
         return checkbox;
+    }
+
+    /**
+     * ensureMinimumRowHeight, This checks the tree row height, and increases it to meet the
+     * supplied minimum row height whenever needed. Note that this function can only increased the
+     * tree row height, it can never decrease it.
+     *
+     * Technical Note: This function was created so that the tree cell renderer can adjust the tree
+     * row height to meet the minimum required size of any default or custom icons which are set to
+     * be displayed in the tree rows. It was originally considered and attempted to adjust the row
+     * height of each row individually. However, individual row height adjustments turned out to be
+     * infeasible in both complexity and in the nonstandard usage of the underlying BasicTreeUI
+     * classes.
+     */
+    private void ensureMinimumRowHeight(int minimumRowHeight) {
+        if (tree.getRowHeight() < minimumRowHeight) {
+            tree.setRowHeight(minimumRowHeight);
+        }
     }
 
     /**
@@ -192,28 +215,40 @@ public class CheckCellRenderer extends JPanel
         checkbox.setEnabled(treeEnabled);
         defaultRendererLabel.setEnabled(treeEnabled);
 
-        // Configure the areas to match the appropriate selection colors.
+        // Get the colors values we will need for configuring selected and unselected row colors.
+        Color textBackground = (entry.textBackgroundColor == null)
+                ? defaultTextBackgroundColor : entry.textBackgroundColor;
+        Color textForeground = (entry.textForegroundColor == null)
+                ? defaultTextForegroundColor : entry.textForegroundColor;
+        Color selectionBackground = tree.selectionBackgroundColor;
+        Color selectionForeground = tree.selectionForegroundColor;
+
+        // Configure the areas to match the appropriate selected or unselected colors.
         if (selected) {
-            // Change the areas to match the selection colors.
+            // Change the areas to match the selection colors, as appropriate.
             if (tree.selectionsHighlightEntireRow) {
-                leftSideBackgroundPanel.setForeground(tree.selectionForegroundColor);
-                leftSideBackgroundPanel.setBackground(tree.selectionBackgroundColor);
+                leftSideBackgroundPanel.setBackground(selectionBackground);
+                leftSideBackgroundPanel.setForeground(selectionForeground);
             } else {
-                leftSideBackgroundPanel.setForeground(textForegroundColor);
-                leftSideBackgroundPanel.setBackground(textBackgroundColor);
+                leftSideBackgroundPanel.setBackground(defaultTextBackgroundColor);
+                leftSideBackgroundPanel.setForeground(defaultTextForegroundColor);
             }
-            rightSideBackgroundPanel.setForeground(tree.selectionForegroundColor);
-            rightSideBackgroundPanel.setBackground(tree.selectionBackgroundColor);
-            defaultRendererPanel.setForeground(tree.selectionForegroundColor);
-            defaultRendererPanel.setBackground(tree.selectionBackgroundColor);
+            rightSideBackgroundPanel.setBackground(selectionBackground);
+            rightSideBackgroundPanel.setForeground(selectionForeground);
+            defaultRendererPanel.setBackground(selectionBackground);
+            defaultRendererPanel.setForeground(selectionForeground);
+            defaultRendererLabel.setBackground(selectionBackground);
+            defaultRendererLabel.setForeground(selectionForeground);
         } else {
             // Change all areas to match the "normal" (unselected) colors.
-            leftSideBackgroundPanel.setForeground(textForegroundColor);
-            leftSideBackgroundPanel.setBackground(textBackgroundColor);
-            rightSideBackgroundPanel.setForeground(textForegroundColor);
-            rightSideBackgroundPanel.setBackground(textBackgroundColor);
-            defaultRendererPanel.setForeground(textForegroundColor);
-            defaultRendererPanel.setBackground(textBackgroundColor);
+            leftSideBackgroundPanel.setBackground(defaultTextBackgroundColor);
+            leftSideBackgroundPanel.setForeground(defaultTextForegroundColor);
+            rightSideBackgroundPanel.setBackground(textBackground);
+            rightSideBackgroundPanel.setForeground(textForeground);
+            defaultRendererPanel.setBackground(textBackground);
+            defaultRendererPanel.setForeground(textForeground);
+            defaultRendererLabel.setBackground(textBackground);
+            defaultRendererLabel.setForeground(textForeground);
         }
 
         // Set the appropriate icon for this entry.
@@ -221,14 +256,19 @@ public class CheckCellRenderer extends JPanel
         // Also save the icon height for use by the getPreferredSize() function.
         boolean rowIsFolder = (entry.getChildCount() > 0);
         boolean rowIsExpanded = checkTree.isExpanded(row);
-        if (entry.userIconVisible && entry.userIcon != null) {
-            defaultRendererLabel.setIcon(entry.userIcon);
+        Icon userIcon = entry.userIcon;
+        if (entry.userIconVisible && userIcon != null) {
+            defaultRendererLabel.setIcon(userIcon);
+            ensureMinimumRowHeight(userIcon.getIconHeight());
         } else if (checkTree.iconFallbackFolderNodes && rowIsFolder && rowIsExpanded) {
             defaultRendererLabel.setIcon(iconOpenFolder);
+            ensureMinimumRowHeight(iconOpenFolder.getIconHeight());
         } else if (checkTree.iconFallbackFolderNodes && rowIsFolder && (!rowIsExpanded)) {
             defaultRendererLabel.setIcon(iconClosedFolder);
+            ensureMinimumRowHeight(iconClosedFolder.getIconHeight());
         } else if (checkTree.iconFallbackLeafNodes && (!rowIsFolder)) {
             defaultRendererLabel.setIcon(iconLeaf);
+            ensureMinimumRowHeight(iconLeaf.getIconHeight());
         } else {
             defaultRendererLabel.setIcon(new ImageIcon());
         }
@@ -329,7 +369,7 @@ public class CheckCellRenderer extends JPanel
         {
             rightSideBackgroundPanel.setLayout(new FormLayout(
                     "3px, pref:grow, 1px",
-                    "pref:grow(0.99), fill:pref, pref:grow"));
+                    "fill:pref:grow"));
 
             //======== defaultRendererPanel ========
             {
@@ -338,7 +378,7 @@ public class CheckCellRenderer extends JPanel
                         "pref:grow",
                         "fill:pref:grow"));
             }
-            rightSideBackgroundPanel.add(defaultRendererPanel, CC.xy(2, 2));
+            rightSideBackgroundPanel.add(defaultRendererPanel, CC.xy(2, 1));
         }
         add(rightSideBackgroundPanel, CC.xy(2, 1));
         // JFormDesigner - End of component initialization  //GEN-END:initComponents

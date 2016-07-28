@@ -13,5 +13,6 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>Javadocs</word>
         <word>javax</word>
         <word>preorder</word>
+        <word>Reponsible</word>
     </spellchecker-wordlist>
 </project-shared-configuration>

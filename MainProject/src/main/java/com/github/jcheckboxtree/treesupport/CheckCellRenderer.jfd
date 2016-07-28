@@ -41,7 +41,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "3px, pref:grow, 1px"
-				"$rowSpecs": "pref:grow(0.99), fill:pref, pref:grow"
+				"$rowSpecs": "fill:pref:grow"
 			} ) {
 				name: "rightSideBackgroundPanel"
 				auxiliary() {
@@ -59,7 +59,6 @@ new FormModel {
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
-					"gridY": 2
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2

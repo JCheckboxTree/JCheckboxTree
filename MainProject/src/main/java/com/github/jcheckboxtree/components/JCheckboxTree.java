@@ -190,7 +190,7 @@ public class JCheckboxTree extends JTree {
         Icon iconOriginal = javax.swing.UIManager.getIcon("OptionPane.informationIcon");
         Image imageOriginal = Use.iconToImage(iconOriginal);
         Image imageScaled = imageOriginal.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        Icon icon = new ImageIcon(imageScaled); 
+        Icon icon = new ImageIcon(imageScaled);
         // Create the tree model. 
         CheckEntry root = new CheckEntry(BoxVisible.Show, false, "JTree");
         CheckEntry custom = new CheckEntry(BoxVisible.Show, false, "Customized Entries");
@@ -200,10 +200,10 @@ public class JCheckboxTree extends JTree {
         custom.add(new CheckEntry(BoxVisible.Hide, false, "Entry without a checkbox."));
         CheckEntry colors = new CheckEntry(BoxVisible.Show, false, "Colors");
         root.add(colors);
-        colors.add(new CheckEntry(BoxVisible.Show, false, "blue"));
-        colors.add(new CheckEntry(BoxVisible.Show, false, "violet"));
-        colors.add(new CheckEntry(BoxVisible.Show, false, "red"));
-        colors.add(new CheckEntry(BoxVisible.Show, false, "yellow"));
+        colors.add(new CheckEntry(BoxVisible.Show, false, "blue", Color.blue));
+        colors.add(new CheckEntry(BoxVisible.Show, false, "green", Color.green));
+        colors.add(new CheckEntry(BoxVisible.Show, false, "red", Color.red));
+        colors.add(new CheckEntry(BoxVisible.Show, false, "orange", Color.orange));
         CheckEntry food = new CheckEntry(BoxVisible.Show, false, "Food");
         root.add(food);
         food.add(new CheckEntry(BoxVisible.Show, false, "hot dogs"));
