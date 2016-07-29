@@ -193,11 +193,11 @@ public class JCheckboxTree extends JTree {
         Icon icon = new ImageIcon(imageScaled);
         // Create the tree model. 
         CheckEntry root = new CheckEntry(BoxVisible.Show, false, "JTree");
-        CheckEntry custom = new CheckEntry(BoxVisible.Show, false, "Customized Entries");
+        CheckEntry custom = new CheckEntry(BoxVisible.Show, false, "Custom Entries");
         root.add(custom);
-        custom.add(new CheckEntry(BoxVisible.Show, false, "Entry with a custom image icon.", icon));
-        custom.add(new CheckEntry(BoxVisible.Show, true, "Entry that is initially checked."));
         custom.add(new CheckEntry(BoxVisible.Hide, false, "Entry without a checkbox."));
+        custom.add(new CheckEntry(BoxVisible.Show, true, "Entry that is initially checked."));
+        custom.add(new CheckEntry(BoxVisible.Show, false, "Entry with a custom image icon.", icon));
         CheckEntry colors = new CheckEntry(BoxVisible.Show, false, "Colors");
         root.add(colors);
         colors.add(new CheckEntry(BoxVisible.Show, false, "Purple", new Color(148, 0, 211)));
