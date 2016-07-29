@@ -11,8 +11,8 @@ Java swing checkbox tree. Easy to use, good looking, and nice features.
 * The tree can be set to highlight the entire row on selection, or just the row text, as desired.
 * JCheckboxTree extends JTree, and provides all the common tree component functionality. 
 * Relatively compact source code.
-* Code and usage examples.
 * Complete Javadoc documentation.
+* Code and usage examples.
 * Active developer support. 
 * Open source MIT license.
 
