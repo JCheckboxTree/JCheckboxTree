@@ -3,7 +3,7 @@ Java swing checkbox tree. Easy to use, good looking, and nice features.
 
 
 ## General Features:
-* JCheckboxTree is a Java Swing tree component with the ability to have a checkbox on each entry. 
+* JCheckboxTree is a swing tree component that can have a checkbox on any or all of its tree entries.
 * Can display a custom icon, a default tree icon, or no icon in each tree entry.
 * Entries can optionally be set to use custom text colors.
 * The checkboxes can be hidden if needed, on a per entry basis.
