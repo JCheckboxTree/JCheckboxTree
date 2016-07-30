@@ -12,7 +12,7 @@ public class CheckModel extends DefaultTreeModel {
     /**
      * Constructor, with root entry.
      */
-    public CheckModel(TreeNode root) {
+    public CheckModel(CheckEntry root) {
         super(root);
         verifyRootEntry();
     }
@@ -21,13 +21,41 @@ public class CheckModel extends DefaultTreeModel {
      * Constructor, with root entry and asksAllowsChildren. See also, the function:
      * DefaultTreeModel.setAsksAllowsChildren()
      */
-    public CheckModel(TreeNode root, boolean asksAllowsChildren) {
+    public CheckModel(CheckEntry root, boolean asksAllowsChildren) {
         super(root, asksAllowsChildren);
         verifyRootEntry();
     }
 
     /**
-     * setRoot, Sets the root entry. A root entry must be an instance of CheckEntry, and cannot be
+     * addEntryInto, Invoked this to add newChild to the parent. This will then message
+     * nodesWereInserted with the correct child index to create the notification event. This is the
+     * preferred way to add children as it will create the appropriate event.
+     */
+    public void addEntryInto(CheckEntry newChild, CheckEntry parent) {
+        insertNodeInto(newChild, parent, parent.getChildCount());
+    }
+
+    /**
+     * getPathToRoot, Builds the parents of the entry up to and including the root entry. The
+     * original entry is the last element in the returned array.
+     *
+     * @param entry The CheckEntry to get the path for.
+     */
+    public CheckEntry[] getPathToRoot(CheckEntry entry) {
+        return (CheckEntry[]) super.getPathToRoot(entry);
+    }
+
+    /**
+     * insertEntryInto, Invoked this to insert newChild at location index in parents children. This
+     * will then message nodesWereInserted to create the notification event. This is the preferred
+     * way to insert children as it will create the appropriate event.
+     */
+    public void insertEntryInto(CheckEntry newChild, CheckEntry parent, int index) {
+        super.insertNodeInto(newChild, parent, index);
+    }
+
+    /**
+     * setRoot, Sets the root entry. A root entry must either be an instance of CheckEntry, or be
      * null.
      */
     @Override
@@ -37,15 +65,14 @@ public class CheckModel extends DefaultTreeModel {
     }
 
     /**
-     * verifyRootEntry, This verifies that the root entry is not null, and is an instance of
-     * CheckEntry. If the root entry does not meet these criteria, then this function will throw an
-     * exception.
+     * verifyRootEntry, This verifies is either an instance or descendant of CheckEntry, or is null.
+     * If the root entry does not meet these criteria, then this function will throw an exception.
      */
     private void verifyRootEntry() {
         Object rootEntry = getRoot();
         if (rootEntry == null) {
-            throw new RuntimeException("CheckModel.setRoot(), "
-                    + "The root entry cannot be null.");
+            // Null is allowed for the root entry. 
+            return;
         }
         if (!(rootEntry instanceof CheckEntry)) {
             throw new RuntimeException("CheckModel.setRoot(), "

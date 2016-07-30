@@ -1,6 +1,7 @@
 package com.github.jcheckboxtree.demo;
 
 import com.github.jcheckboxtree.components.JCheckboxTree;
+import com.github.jcheckboxtree.treesupport.CheckModel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.JFrame;
@@ -66,19 +67,6 @@ public class JCheckboxTreeDemo extends JFrame {
         setSize(640, 480);
         setLocationRelativeTo(null);
         setVisible(true);
-
-        /* Unused previous example code.
-            checkboxTree._addNode(BoxVisible.Show, false, "Node 1");
-            CheckNode node2 = checkboxTree._addNode(BoxVisible.Show, true, "Node 2, starts checked");
-            checkboxTree._addNode(BoxVisible.Show, false, "Node 2a", node2);
-            checkboxTree._addNode(BoxVisible.Show, false, "Node 2b", node2);
-            checkboxTree._addNode(BoxVisible.Show, false, "Node 2first", node2, 0);
-            CheckNode node3 = checkboxTree._addNode(BoxVisible.Show, false, "Node 3");
-            checkboxTree._addNode(BoxVisible.Show, false, "Node 3a", node3);
-            checkboxTree._addNode(BoxVisible.Show, false, "Node 3b", node3);
-            checkboxTree._addNode(BoxVisible.Hide, false, "Node 4, no checkbox");
-            checkboxTree.expandAll();
-         */
     }
 
 }

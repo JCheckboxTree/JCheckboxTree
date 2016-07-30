@@ -105,6 +105,14 @@ public class JCheckboxTree extends JTree {
     public boolean selectionsHighlightEntireRow = true;
 
     /**
+     * NULL_ROOT, This can be passed into the JCheckboxTree constructor to create a tree that is
+     * initialized with a null root entry.
+     *
+     * Example: JCheckboxTree tree = new JCheckboxTree(JCheckboxTree.NULL_ROOT)
+     */
+    static public final CheckEntry NULL_ROOT = null;
+
+    /**
      * Constructor with default data, This creates a tree with a set of example checkbox tree data.
      * This constructor is generally used only for creating demo applications.
      */
@@ -128,9 +136,12 @@ public class JCheckboxTree extends JTree {
      * Constructor with a root entry, Creates a tree using the specified entry as the root. This
      * root entry will be used to create a CheckModel instance. If the root contains any descendents
      * that are not a CheckEntry, then this will throw an exception.
+     *
+     * To create a tree with a null root entry, call this constructor with the NULL_ROOT constant,
+     * like this: JCheckboxTree tree = new JCheckboxTree(JCheckboxTree.NULL_ROOT)
      */
     public JCheckboxTree(CheckEntry root) {
-        super(root);
+        super(new CheckModel(root));
         // The checkTreeForInvalidNodes() function is called during super(root), via setModel().
         zInitializeTreeSettings();
     }
@@ -293,10 +304,8 @@ public class JCheckboxTree extends JTree {
         }
         Object root = model.getRoot();
         if (root == null) {
-            throw new RuntimeException("JCheckboxTree.checkTreeForInvalidNodes(), "
-                    + "The root entry is null.");
-        }
-        if (!(root instanceof CheckEntry)) {
+            // A null root entry is allowed.
+        } else if (!(root instanceof CheckEntry)) {
             throw new RuntimeException("JCheckboxTree.checkTreeForInvalidNodes(), "
                     + "The root entry is not an instance of CheckEntry.");
         }
@@ -326,31 +335,31 @@ public class JCheckboxTree extends JTree {
         Image imageScaled = imageOriginal.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         Icon icon = new ImageIcon(imageScaled);
         // Create the tree model. 
-        CheckEntry root = new CheckEntry(BoxVisible.Show, false, "JTree");
-        CheckEntry custom = new CheckEntry(BoxVisible.Show, false, "Custom Entries");
+        CheckEntry root = new CheckEntry("JTree");
+        CheckEntry custom = new CheckEntry("Custom Entries");
         root.add(custom);
-        custom.add(new CheckEntry(BoxVisible.Hide, false, "Entry without a checkbox."));
-        custom.add(new CheckEntry(BoxVisible.Show, true, "Entry that is initially checked."));
-        custom.add(new CheckEntry(BoxVisible.Show, false, "Entry with a custom image icon.", icon));
-        CheckEntry colors = new CheckEntry(BoxVisible.Show, false, "Colors");
+        custom.add(new CheckEntry("Entry without a checkbox.").withBoxHidden());
+        custom.add(new CheckEntry("Entry that is initially checked.").withBoxChecked(true));
+        custom.add(new CheckEntry("Entry with a custom image icon.").withIcon(icon));
+        CheckEntry colors = new CheckEntry("Colors");
         root.add(colors);
-        colors.add(new CheckEntry(BoxVisible.Show, false, "Purple", new Color(148, 0, 211)));
-        colors.add(new CheckEntry(BoxVisible.Show, false, "Blue", Color.blue));
-        colors.add(new CheckEntry(BoxVisible.Show, false, "Green", new Color(0, 120, 0)));
-        colors.add(new CheckEntry(BoxVisible.Show, false, "Orange", new Color(230, 102, 0)));
-        colors.add(new CheckEntry(BoxVisible.Show, false, "Red", Color.red));
-        CheckEntry food = new CheckEntry(BoxVisible.Show, false, "Food");
+        colors.add(new CheckEntry("Purple").withColor(new Color(148, 0, 211)));
+        colors.add(new CheckEntry("Blue").withColor(Color.blue));
+        colors.add(new CheckEntry("Green").withColor(new Color(0, 120, 0)));
+        colors.add(new CheckEntry("Orange").withColor(new Color(230, 102, 0)));
+        colors.add(new CheckEntry("Red").withColor(Color.red));
+        CheckEntry food = new CheckEntry("Food");
         root.add(food);
-        food.add(new CheckEntry(BoxVisible.Show, false, "Hot dogs"));
-        food.add(new CheckEntry(BoxVisible.Show, false, "Pizza"));
-        food.add(new CheckEntry(BoxVisible.Show, false, "Ravioli"));
-        food.add(new CheckEntry(BoxVisible.Show, false, "Bananas"));
-        CheckEntry coloredFood = new CheckEntry(BoxVisible.Show, false, "Colorized Food");
+        food.add(new CheckEntry("Hot dogs"));
+        food.add(new CheckEntry("Pizza"));
+        food.add(new CheckEntry("Ravioli"));
+        food.add(new CheckEntry("Bananas"));
+        CheckEntry coloredFood = new CheckEntry("Colorized Food");
         food.add(coloredFood);
-        coloredFood.add(new CheckEntry(BoxVisible.Show, false, "Green eggs and ham"));
-        coloredFood.add(new CheckEntry(BoxVisible.Show, false, "Skittles bite sized candies"));
-        coloredFood.add(new CheckEntry(BoxVisible.Show, false, "Painted Easter eggs"));
-        CheckEntry last = new CheckEntry(BoxVisible.Show, false, "More stuff.");
+        coloredFood.add(new CheckEntry("Green eggs and ham"));
+        coloredFood.add(new CheckEntry("Skittles bite sized candies"));
+        coloredFood.add(new CheckEntry("Painted Easter eggs"));
+        CheckEntry last = new CheckEntry("More stuff.");
         root.add(last);
         return new CheckModel(root);
     }

@@ -93,6 +93,9 @@ public class TreeIterator implements Iterator<CheckEntry> {
      *
      * If the root entry is visible in the tree (if tree.isRootVisible()), then it will be included
      * in the iteration. Otherwise, the root entry will be excluded from the iteration.
+     *
+     * If the root entry of the supplied tree is null, then the iterator will still function, but it
+     * will not return any elements.
      */
     public TreeIterator(JCheckboxTree tree) {
         this(tree, tree.getRoot(), tree.isRootVisible(), CheckedSpecifier.DoesNotMatter,
@@ -102,6 +105,9 @@ public class TreeIterator implements Iterator<CheckEntry> {
     /**
      * Constructor, for the whole tree with includeRoot. This will iterate through the entire tree.
      * If specified, this will skip over the root entry.
+     *
+     * If the root entry of the supplied tree is null, then the iterator will still function, but it
+     * will not return any elements.
      */
     public TreeIterator(JCheckboxTree tree, boolean includeRoot) {
         this(tree, tree.getRoot(), includeRoot, CheckedSpecifier.DoesNotMatter,
@@ -111,6 +117,9 @@ public class TreeIterator implements Iterator<CheckEntry> {
     /**
      * Constructor, for the whole tree with all options. This will iterate through the entire tree.
      * This will skip over any entries that do not meet all of the specified parameters.
+     *
+     * If the root entry of the supplied tree is null, then the iterator will still function, but it
+     * will not return any elements.
      */
     public TreeIterator(JCheckboxTree tree, boolean includeRoot,
             CheckedSpecifier checkedSpecifier, ExpandedSpecifier expandedSpecifier) {
@@ -123,6 +132,9 @@ public class TreeIterator implements Iterator<CheckEntry> {
      *
      * If the root entry is visible in the tree (if tree.isRootVisible()), then it will be included
      * in the iteration. Otherwise, the root entry will be excluded from the iteration.
+     *
+     * If the startingEntry is null, then the iterator will still function, but it will not return
+     * any elements.
      */
     public TreeIterator(JCheckboxTree tree, CheckEntry startingEntry) {
         this(tree, startingEntry, tree.isRootVisible(), CheckedSpecifier.DoesNotMatter,
@@ -132,6 +144,9 @@ public class TreeIterator implements Iterator<CheckEntry> {
     /**
      * Constructor, with a starting entry and includeRoot. This will iterate through the starting
      * entry and any children. If specified, this will skip over the root entry.
+     *
+     * If the startingEntry is null, then the iterator will still function, but it will not return
+     * any elements.
      */
     public TreeIterator(JCheckboxTree tree, CheckEntry startingEntry, boolean includeRoot) {
         this(tree, startingEntry, includeRoot, CheckedSpecifier.DoesNotMatter,
@@ -205,8 +220,10 @@ public class TreeIterator implements Iterator<CheckEntry> {
     private CheckEntry getFutureEntryOrNull(
             boolean firstCall, CheckEntry firstCandidateOrNull, CheckEntry previousEntryOrNull) {
         if (firstCall && (firstCandidateOrNull == null)) {
-            throw new RuntimeException("TreeIterator.getFutureEntryOrNull(), "
-                    + "The 'startingEntry' cannot be null during the first call.");
+            // If the first candidate is null, then return null.
+            // This is possible if the root entry of the tree is null, or if the user passes in a 
+            // null startingEntry.
+            return null;
         }
         if (!firstCall && (previousEntryOrNull == null)) {
             throw new RuntimeException("TreeIterator.getFutureEntryOrNull(), "
