@@ -228,7 +228,7 @@ public class JCheckboxTree extends JTree {
         // This will be set to true if it is detected that the mouse is inside the inactive zone
         // surrounding the outside of the checkbox.
         boolean mouseIsInsideInactiveZone = false;
-        // Check to see if the tree is enabled, if the event has not been consumed, and if this 
+        // Check to see if the tree is enabled, if the event has not been consumed, and if this
         // event is a mouse press event.
         if ((isEnabled()) && (!event.isConsumed()) && (event.getID() == MouseEvent.MOUSE_PRESSED)) {
             // Get the event mouse location, relative to the tree.
@@ -265,7 +265,7 @@ public class JCheckboxTree extends JTree {
                 }
             }
         }
-        // If needed, perform default JTree processing for this click event, such as changing the 
+        // If needed, perform default JTree processing for this click event, such as changing the
         // tree selection.
         if (!mouseIsInsideInactiveZone) {
             super.processMouseEvent(event);
@@ -288,9 +288,10 @@ public class JCheckboxTree extends JTree {
     }
 
     /**
-     * zCheckTreeForInvalidEntries, This method confirms that the tree contains only CheckEntry
-     * instances. This will throw a RuntimeException if the tree contains any entries that are not
-     * CheckEntry instances, or if the tree model or the tree entries have any other problems.
+     * zCheckTreeForInvalidEntries, This method confirms that the tree contains a CheckModel, with
+     * only CheckEntry instances. This will throw a RuntimeException if the tree contains any
+     * entries that are not CheckEntry instances, or if the tree model or the tree entries have any
+     * other problems.
      */
     private void zCheckTreeForInvalidEntries() {
         TreeModel model = getModel();
@@ -325,16 +326,17 @@ public class JCheckboxTree extends JTree {
     }
 
     /**
-     * zGetSampleTreeModel, This creates and returns a sample CheckModel instance. This is used
-     * primarily for demo applications, to show something interesting in the tree.
+     * zGetSampleTreeModel, This creates and returns a sample CheckModel instance. The model is
+     * populated with sample tree entries. This is used primarily for demo applications, to show
+     * something interesting in the tree.
      */
-    protected static CheckModel zGetSampleTreeModel() {
-        // Get an icon to use in the model. 
+    public static CheckModel zGetSampleTreeModel() {
+        // Get an icon to use in the model.
         Icon iconOriginal = javax.swing.UIManager.getIcon("OptionPane.informationIcon");
         Image imageOriginal = Use.iconToImage(iconOriginal);
         Image imageScaled = imageOriginal.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         Icon icon = new ImageIcon(imageScaled);
-        // Create the tree model. 
+        // Create a tree entry structure.
         CheckEntry root = new CheckEntry("JTree");
         CheckEntry custom = new CheckEntry("Custom Entries");
         root.add(custom);
@@ -361,7 +363,9 @@ public class JCheckboxTree extends JTree {
         coloredFood.add(new CheckEntry("Painted Easter eggs"));
         CheckEntry last = new CheckEntry("More stuff.");
         root.add(last);
-        return new CheckModel(root);
+        // Create and return the tree model.
+        CheckModel treeModel = new CheckModel(root);
+        return treeModel;
     }
 
     /**

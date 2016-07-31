@@ -303,14 +303,24 @@ public class CheckEntry extends DefaultMutableTreeNode {
     }
 
     /**
-     * getRoot, Returns the root of the tree that contains this node. The root is the ancestor with
-     * a null parent.
-     *
-     * @see #isNodeAncestor
-     * @return the root of the tree that contains this node
+     * getRoot, Deprecated for clarity. getRootLocal() should be used instead. See also, the
+     * getRootLocal() javadocs.
      */
     @Override
+    @Deprecated
     public CheckEntry getRoot() {
+        return (CheckEntry) super.getRoot();
+    }
+
+    /**
+     * getRootLocal, Returns the local root of the entry tree that contains this entry. The local
+     * root is the ancestor with a null parent. If this entry is contained in a CheckModel and a
+     * JCheckboxTree, then this will return the same result as JCheckboxTree.getRoot().
+     *
+     * @see #isNodeAncestor
+     * @return The local root of the entry tree that contains this entry.
+     */
+    public CheckEntry getRootLocal() {
         return (CheckEntry) super.getRoot();
     }
 

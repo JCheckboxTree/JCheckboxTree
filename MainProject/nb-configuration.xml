@@ -10,9 +10,9 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>checkbox</word>
         <word>checkboxes</word>
         <word>fallbacks</word>
-        <word>Javadocs</word>
+        <word>javadocs</word>
         <word>javax</word>
         <word>preorder</word>
-        <word>Reponsible</word>
+        <word>reponsible</word>
     </spellchecker-wordlist>
 </project-shared-configuration>
