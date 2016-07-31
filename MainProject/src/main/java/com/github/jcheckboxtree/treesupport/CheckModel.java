@@ -46,6 +46,16 @@ public class CheckModel extends DefaultTreeModel {
     }
 
     /**
+     * getRoot, Returns the root of the tree. Returns null only if the tree has no nodes.
+     *
+     * @return the root of the tree
+     */
+    @Override
+    public CheckEntry getRoot() {
+        return (CheckEntry) root;
+    }
+
+    /**
      * insertEntryInto, Invoked this to insert newChild at location index in parents children. This
      * will then message nodesWereInserted to create the notification event. This is the preferred
      * way to insert children as it will create the appropriate event.
@@ -62,6 +72,15 @@ public class CheckModel extends DefaultTreeModel {
     public void setRoot(TreeNode rootEntry) {
         super.setRoot(root);
         verifyRootEntry();
+    }
+
+    /**
+     * removeEntryFromParent, Message this to remove an entry from its parent. This will message
+     * nodesWereRemoved to create the appropriate event. This is the preferred way to remove an
+     * entry as it handles the event creation for you.
+     */
+    public void removeEntryFromParent(CheckEntry entry) {
+        super.removeNodeFromParent(entry);
     }
 
     /**
